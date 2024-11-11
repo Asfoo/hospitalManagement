@@ -1,6 +1,7 @@
 package com.hospital.hospitalmanagementsystem.controller;
 
 import com.hospital.hospitalmanagementsystem.dto.ResultMessage;
+import com.hospital.hospitalmanagementsystem.dto.UserLoginDto;
 import com.hospital.hospitalmanagementsystem.dto.UserRegistrationDto;
 import com.hospital.hospitalmanagementsystem.service.IUsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,9 @@ public class UserController {
         } else {
             return ResultMessage.error(400, result);
         }
+    }
+    @PostMapping("/login")
+    public ResultMessage loginUser(@RequestBody UserLoginDto loginDto) {
+        return userService.loginUser(loginDto);
     }
 }

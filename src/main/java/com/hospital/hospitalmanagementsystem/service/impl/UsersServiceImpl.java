@@ -2,6 +2,8 @@ package com.hospital.hospitalmanagementsystem.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
+import com.hospital.hospitalmanagementsystem.dto.ResultMessage;
+import com.hospital.hospitalmanagementsystem.dto.UserLoginDto;
 import com.hospital.hospitalmanagementsystem.dto.UserRegistrationDto;
 import com.hospital.hospitalmanagementsystem.entity.Users;
 import com.hospital.hospitalmanagementsystem.mapper.UsersMapper;
@@ -57,5 +59,22 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
         int result = userMapper.insert(newUser);
 
         return result > 0 ? "User registered successfully." : "Registration failed, please try again.";
+    }
+
+
+    @Override
+    public ResultMessage loginUser(UserLoginDto loginDto) {
+        // Query to find user by email
+        QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(Users::getEmail, loginDto.getEmail());
+
+        Users user = userMapper.selectOne(queryWrapper);
+
+        // Check if user exists and password matches
+        if (!ObjectUtils.isEmpty(user) && user.getPassword().equals(loginDto.getPassword())) {
+            return ResultMessage.success("Login successful", user);
+        } else {
+            return ResultMessage.error(401, "Invalid email or password");
+        }
     }
 }
