@@ -2,6 +2,8 @@ package com.hospital.hospitalmanagementsystem.mapper;
 
 import com.hospital.hospitalmanagementsystem.entity.Insurance;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 /**
  * <p>
@@ -11,6 +13,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author asfand
  * @since 2024-11-11
  */
+@Mapper
+@Repository
 public interface InsuranceMapper extends BaseMapper<Insurance> {
 
 }
