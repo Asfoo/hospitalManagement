@@ -9,6 +9,7 @@ import com.hospital.hospitalmanagementsystem.entity.Users;
 import com.hospital.hospitalmanagementsystem.mapper.UsersMapper;
 import com.hospital.hospitalmanagementsystem.service.IUsersService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hospital.hospitalmanagementsystem.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,17 +63,18 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, Users> implements
     }
 
 
-    @Override
     public ResultMessage loginUser(UserLoginDto loginDto) {
-        // Query to find user by email
         QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(Users::getEmail, loginDto.getEmail());
 
         Users user = userMapper.selectOne(queryWrapper);
 
-        // Check if user exists and password matches
         if (!ObjectUtils.isEmpty(user) && user.getPassword().equals(loginDto.getPassword())) {
-            return ResultMessage.success("Login successful", user);
+            // Generate JWT token
+            String token = JwtUtil.generateToken(user.getEmail());
+
+            // Return success message with token
+            return ResultMessage.success("Login successful", token);
         } else {
             return ResultMessage.error(401, "Invalid email or password");
         }
